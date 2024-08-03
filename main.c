@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 int match(char*, char*);
 int matchhere(char*, char*);
@@ -37,8 +38,9 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  FILE* fptr;
-  fptr = fopen(argv[2], "r");
+  FILE* fptr = fopen(argv[2], "r");
+
+  bool found = false;
 
   if (fptr) {
     size_t counter = 0;
@@ -46,7 +48,8 @@ int main(int argc, char** argv) {
     while (fgets(line, 512, fptr)) {
       ++counter;
       if (match(argv[1], line)) {
-        fprintf(stdout, "%zu: %s", counter, line);
+        fprintf(stdout, "%zu:%s", counter, line);
+        found = true;
       }
     }
 
@@ -56,5 +59,5 @@ int main(int argc, char** argv) {
   }
 
   fclose(fptr);
-  return EXIT_SUCCESS;
+  return !found;
 }
